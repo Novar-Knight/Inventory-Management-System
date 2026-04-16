@@ -27,6 +27,10 @@ def find_item(item_id):
 def fetch_openfoodfacts(search):
     url = f"https://world.openfoodfacts.org/cgi/search.pl?search_terms={search}&search_simple=1&action=process&json=1"
     response = requests.get(url, timeout=10)
+    
+    if response.status_code != 200:
+        return None
+    
     data = response.json()
 
     if data.get("products"):
