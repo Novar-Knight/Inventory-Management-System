@@ -3,6 +3,7 @@ import requests
 
 app = Flask(__name__)
 
+# Mock database
 inventory = [
     {
         "id": 1,
@@ -18,21 +19,19 @@ inventory = [
 ]
 
 
-
+# Find item by ID
 def find_item(item_id):
     return next((item for item in inventory if item["id"] == item_id), None)
 
 
-def fetch_from_openfoodfacts(barcode):
-    url = f"https://world.openfoodfacts.org/cgi/search.pl?search_terms={barcode}&search_simple=1&action=process&json=1"
-    response = requests.get(url)
-    
-    if response.status_code != 200:
-        return None
-    
+# External API call
+def fetch_openfoodfacts(search):
+    url = f"https://world.openfoodfacts.org/cgi/search.pl?search_terms={search}&search_simple=1&action=process&json=1"
+    response = requests.get(url, timeout=10)
     data = response.json()
-    if data.get("products") == 1:
-        product = data["products"]
+
+    if data.get("products"):
+        product = data["products"][0]
         return {
             "product_name": product.get("product_name", "Unknown"),
             "brands": product.get("brands", "Unknown"),
@@ -41,17 +40,13 @@ def fetch_from_openfoodfacts(barcode):
     return None
 
 
-# Inventory Endpoints
-# CRUD operations for inventory management
-# Search and Import Endpoints
-# Search for products using OpenFoodFacts API
-
-#GET ALL INVENTORY ITEMS
+# GET all
 @app.route('/inventory', methods=['GET'])
 def get_inventory():
     return jsonify(inventory)
 
-#GET A SINGLE ITEM BY ID
+
+# GET one
 @app.route('/inventory/<int:item_id>', methods=['GET'])
 def get_item(item_id):
     item = find_item(item_id)
@@ -59,49 +54,63 @@ def get_item(item_id):
         return jsonify({"error": "Item not found"}), 404
     return jsonify(item)
 
-#CREATE A NEW ITEM
+
+# POST create
 @app.route('/inventory', methods=['POST'])
 def add_item():
     data = request.json
+
     new_item = {
         "id": inventory[-1]["id"] + 1 if inventory else 1,
         "status": 1,
         "product": data
     }
+
     inventory.append(new_item)
     return jsonify(new_item), 201
 
-#UPDATE AN EXISTING ITEM
+
+# PATCH update
 @app.route('/inventory/<int:item_id>', methods=['PATCH'])
 def update_item(item_id):
     item = find_item(item_id)
+
     if not item:
         return jsonify({"error": "Item not found"}), 404
+
     data = request.json
     item["product"].update(data)
+
     return jsonify(item)
 
-#DELETE AN ITEM
+
+# DELETE
 @app.route('/inventory/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
     item = find_item(item_id)
+
     if not item:
         return jsonify({"error": "Item not found"}), 404
+
     inventory.remove(item)
     return jsonify({"message": "Deleted successfully"})
 
-#SEARCH FOR A PRODUCT USING OPENFOODFACTS API
-@app.route('/search/<string:barcode>', methods=['GET'])
-def search_api(barcode):
-    product = fetch_from_openfoodfacts(barcode)
+
+# External API search
+@app.route('/search/<string:name>', methods=['GET'])
+def search_api(name):
+    product = fetch_openfoodfacts(name)
+
     if not product:
         return jsonify({"error": "No product found"}), 404
+
     return jsonify(product)
 
-#IMPORT A PRODUCT FROM OPENFOODFACTS API AND ADD TO INVENTORY
-@app.route('/import/<string:barcode>', methods=['POST'])
-def import_product(barcode):
-    product = fetch_from_openfoodfacts(barcode)
+
+# IMPORT from API into database (IMPORTANT FOR EXCELLED)
+@app.route('/import/<string:name>', methods=['POST'])
+def import_product(name):
+    product = fetch_openfoodfacts(name)
 
     if not product:
         return jsonify({"error": "Product not found"}), 404
@@ -118,6 +127,7 @@ def import_product(barcode):
 
     inventory.append(new_item)
     return jsonify(new_item), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)
