@@ -14,8 +14,13 @@
 ├── cli.py
 ├── Pipfile
 ├── Pipfile.lock
+├── __pycache__
+│   ├── app.cpython-312.pyc
+│   └── test_app.cpython-312-pytest-9.0.3.pyc
 ├── README.md
-└── requirements.txt
+├── requirements.txt
+└── test_app.py
+
 
 # 3 .INSTALLATIONS & SETUP
 
