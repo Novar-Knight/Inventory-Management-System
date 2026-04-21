@@ -10,6 +10,7 @@
 
 # 2 .PROJECT STRUCTURE
 
+```bash
 ├── app.py
 ├── cli.py
 ├── Pipfile
@@ -20,35 +21,41 @@
 ├── README.md
 ├── requirements.txt
 └── test_app.py
-
+```
 
 # 3 .INSTALLATIONS & SETUP
 
 # a.CLONE THE REPOSITORY
 
+```bash
 git clone https://github.com/Novar-Knight/Inventory-Management-System.git
 cd inventory-project
+```
 
 # b.Create virtual environment
-
+```bash
 pipenv shell
+```
 
 # c.Install packages 
-
+```bash
 pipenv install flask request pytest
+```
 
 # d.Run The Application
 
-🔹Start Flask serve;
-
+🔹Start Flask server;
+```bash
 python app.py
+```
 
 # e. Run CLI application
 
 🔹Open a new terminal:
-
+```bash
 python cli.py
 
+```
 # 4.API Endpoints
 🔹 Inventory Routes
 
@@ -65,6 +72,7 @@ python cli.py
 # 5 .CLI Features
 🔹CLI allows users to:
 
+```bash
 1. View All
 2. View One
 3. Add Item
@@ -73,7 +81,7 @@ python cli.py
 6. Search API
 7. Import from API
 8. Exit
-
+```
 🔹 External API Used
 .  OpenFoodFacts API
 .  Used to fetch real product data like:
@@ -83,8 +91,11 @@ python cli.py
 
 
 # 6 .Technologies Used
+
+```bash
 Python
 Flask
 Requests
 Pytest
 OpenFoodFacts API
+```
