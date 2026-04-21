@@ -1,6 +1,6 @@
 # Inventory-Management-System(Flask + OpenFoodFacts API)
 
-# 1 .FEATURES
+# 1 .Features
 > Full CRUD operations (Create, Read, Update, Delete)
 > External API integration (OpenFoodFacts)
 > Import products from external API into local inventory
@@ -8,7 +8,7 @@
 > Mock database using Python list
 > Error handling for invalid requests
 
-# 2 .PROJECT STRUCTURE
+# 2 .Project Structure
 
 ```bash
 ├── app.py
@@ -23,9 +23,9 @@
 └── test_app.py
 ```
 
-# 3 .INSTALLATIONS & SETUP
+# 3 .Installations and Setup
 
-# a.CLONE THE REPOSITORY
+# a.Clone the Repository
 
 ```bash
 git clone https://github.com/Novar-Knight/Inventory-Management-System.git
